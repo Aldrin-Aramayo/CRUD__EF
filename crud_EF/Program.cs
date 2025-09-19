@@ -21,7 +21,7 @@ do
                 List<Persona> personas = await bd.Personas.ToListAsync();
                 foreach (Persona p in personas)
                 {
-                    Console.WriteLine(p.Nombres+" "+ p.Edad.ToWords());
+                    Console.WriteLine(p.Nombres + " " + p.Edad.ToWords());
                 }
                 break;
             }
@@ -42,6 +42,36 @@ do
                 };
                 await bd.Personas.AddAsync(personaNueva);
                 await bd.SaveChangesAsync();
+                break;
+            }
+        case 3:
+            {
+                Console.Write("Ingrese el ID de la persona a actualizar: ");
+                int idPersona = Convert.ToInt32(Console.ReadLine());
+
+                Persona personaBuscar = await bd.Personas.FirstOrDefaultAsync(persona => persona.Id == idPersona);
+
+                if (personaBuscar is null)
+                {
+                    Console.WriteLine("La persona no existe");
+                }
+                else
+                {
+                    Console.Write("Nombre: ");
+                    string nombres = Console.ReadLine();
+                    Console.Write("Edad: ");
+                    int edad = Convert.ToInt32(Console.ReadLine());
+                    Console.Write("Direccion: ");
+                    string direccion = Console.ReadLine();
+
+                    personaBuscar.Nombres = nombres;
+                    personaBuscar.Edad = edad;
+                    personaBuscar.Direccion = direccion;
+
+                    bd.Personas.Update(personaBuscar);
+                    await bd.SaveChangesAsync();
+                    Console.WriteLine("Actualizacion exitosa");
+                }
                 break;
             }
     }
