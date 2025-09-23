@@ -77,6 +77,23 @@ do
 
         case 4:
             {
+                Console.Write("Ingrese el ID de la persona a eliminar: ");
+                int id = Convert.ToInt32(Console.ReadLine());
+
+                Persona personaBuscar = await bd.Personas.FirstOrDefaultAsync(persona => persona.Id == id);
+
+                if (personaBuscar is null)
+                {
+                    Console.WriteLine("la persona no existe");
+                }
+                else
+                {
+                    bd.Personas.Remove(personaBuscar);
+                    await bd.SaveChangesAsync();
+                }
+
+                Console.WriteLine("Se elemino con exito");
+
                 break;
             }
     }
