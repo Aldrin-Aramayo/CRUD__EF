@@ -11,7 +11,7 @@ do
     Console.WriteLine("2 - Agregar");
     Console.WriteLine("3 - Actualizar");
     Console.WriteLine("4 - Eliminar");
-    Console.WriteLine("0 - Salir  v  ");
+    Console.WriteLine("0 - Salir");
     opcion = Convert.ToInt32(Console.ReadLine());
 
     switch (opcion)
@@ -29,11 +29,11 @@ do
             {
                 Console.WriteLine("Agregar nueva persona");
                 Console.WriteLine("Ingrese el nombre:");
-                string nombre = Console.ReadLine();
+                string nombre = Console.ReadLine()!;
                 Console.WriteLine("Ingrese la edad:");
                 int edad = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("Ingrese la dirección:");
-                string direccion = Console.ReadLine();
+                string direccion = Console.ReadLine()!;
                 Persona personaNueva = new Persona()
                 {
                     Nombres = nombre,
@@ -49,7 +49,7 @@ do
                 Console.Write("Ingrese el ID de la persona a actualizar: ");
                 int idPersona = Convert.ToInt32(Console.ReadLine());
 
-                Persona personaBuscar = await bd.Personas.FirstOrDefaultAsync(persona => persona.Id == idPersona);
+                Persona? personaBuscar = await bd.Personas.FirstOrDefaultAsync(persona => persona.Id == idPersona);
 
                 if (personaBuscar is null)
                 {
@@ -58,15 +58,27 @@ do
                 else
                 {
                     Console.Write("Nombre: ");
-                    string nombres = Console.ReadLine();
+                    string? nombres = Console.ReadLine();
                     Console.Write("Edad: ");
-                    int edad = Convert.ToInt32(Console.ReadLine());
+                    int? edad = Convert.ToInt32(Console.ReadLine());
                     Console.Write("Direccion: ");
-                    string direccion = Console.ReadLine();
+                    string? direccion = Console.ReadLine();
 
-                    personaBuscar.Nombres = nombres;
-                    personaBuscar.Edad = edad;
-                    personaBuscar.Direccion = direccion;
+                    if (string.IsNullOrEmpty(nombres!.Trim()) == false)
+                    {
+                        personaBuscar.Nombres = nombres;
+                    }
+
+                    if (edad.HasValue == true)
+                    {
+                        personaBuscar.Edad = edad.Value;
+                    }
+
+                    if (string.IsNullOrEmpty(direccion) == false)
+                    {
+                        personaBuscar.Direccion = direccion;
+                    }
+
 
                     bd.Personas.Update(personaBuscar);
                     await bd.SaveChangesAsync();
@@ -80,7 +92,7 @@ do
                 Console.Write("Ingrese el ID de la persona a eliminar: ");
                 int id = Convert.ToInt32(Console.ReadLine());
 
-                Persona personaBuscar = await bd.Personas.FirstOrDefaultAsync(persona => persona.Id == id);
+                Persona? personaBuscar = await bd.Personas.FirstOrDefaultAsync(persona => persona.Id == id);
 
                 if (personaBuscar is null)
                 {
@@ -100,3 +112,42 @@ do
 
 }
 while (opcion != 0);
+
+
+
+//using crud_EF.Models;
+
+//Persona persona1 = new Persona()
+//{
+//    Id = 10,
+//    Nombres = "Carlos",
+//    Edad = 34,
+//    Direccion = "calle 1"
+//};
+
+//Persona persona2 = new Persona()
+//{
+//    Id = 10,
+//    Nombres = "Carlos",
+//    Edad = 34,
+//    Direccion = "calle 1"
+//};
+
+
+//if (persona1.Equals(persona2))
+//{
+//    Console.WriteLine("parecido");
+//}
+//else
+//{
+//    Console.WriteLine("no parecido");
+//}
+
+//HashSet<Persona> personas = new HashSet<Persona>();
+//personas.Add(persona1);
+//personas.Add(persona2);
+
+//foreach (Persona persona in personas)
+//{
+//    Console.WriteLine(persona);
+//}
